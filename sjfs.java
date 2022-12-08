@@ -33,11 +33,11 @@ public class sjfs {
         }
 
         // SJF(myProcess);
-        SJF(myProcess);
+        SRTF(myProcess);
         s.close();
     }
 
-    static void SRTF(Process myProcess[]) {
+    static void SJF(Process myProcess[]) {
         int curTimeInterval = 0, completedProcesses = 0;
         float totalTurnaroundTime = 0, totalWaitingTime = 0;
         Process curProcess;
@@ -130,52 +130,59 @@ public class sjfs {
 
     }
 
-    static void SJF(Process myProcess[]) {
-        int curTimeInterval = 0, completedProcesses = 0;
+    static void SRTF(Process myProcess[]) {
+        int curTimeInterval = 0, completedProcesses = 0, x =0;
         float totalTurnaroundTime = 0, totalWaitingTime = 0;
         Process curProcess;
+        int n = myProcess.length;
+        int i, st = 0, tot = 0;
+        int f[] = new int[n];// f means it is flag it checks process is completed or not
+        int k[] = new int[n];
+        for (i = 0; i < n; i++) {
+            f[i] = 0;
+            k[i] = myProcess[i].burstTime;
+        }
 
-        // traverse till all process gets completely executed.
-        curProcess = myProcess[0];
-        while (completedProcesses < myProcess.length) {
-            for (int i = 0; i < myProcess.length; i++) {
-                if (myProcess[i].timetoComplete > 0) {
-                    curProcess = myProcess[i];
-                    break;
+        while (true) {
+            int min = 99, c = n;
+            if (tot == n)
+                break;
+
+            for (i = 0; i < n; i++) {
+                if ((myProcess[i].arrivalTime <= st) && (f[i] == 0) && (myProcess[i].burstTime < min)) {
+                    min = myProcess[i].burstTime;
+                    c = i;
                 }
             }
-            System.out.println("Current Time Interval = " + curTimeInterval);
-            System.out.println("No. of processes completed = " + completedProcesses);
 
-            // Reduce time by 1
-            curProcess.timetoComplete -= 1;
-            // check if its remaining time becomes 0
-            if (curProcess.timetoComplete == 0) {
-                // increment the counter of process completion
-                completedProcesses++;
-                // completion time of current process = current_time +1;
-                curProcess.CompletionTime = curTimeInterval + 1;
+            if (c == n)
+                st++;
+            else {
+                myProcess[c].burstTime--;
+                st++;
+                if (myProcess[c].burstTime == 0) {
+                    myProcess[c].CompletionTime = st;
+                    f[c] = 1;
+                    tot++;
+                }
             }
-            curTimeInterval++;
         }
-        for (int i = 0; i < myProcess.length; i++) {
-            // calculate waiting time for each process
-            // waitingTime time = completion time - arrival time - burst_time
-            myProcess[i].waitingTime = myProcess[i].CompletionTime - myProcess[i].arrivalTime - myProcess[i].burstTime;
-
-            // find turnAroundTime time = waiting time - burst time
-            myProcess[i].turnAroundTime = myProcess[i].waitingTime + myProcess[i].burstTime;
+        
+        for (i = 0; i < n; i++) {
+            myProcess[i].turnAroundTime = myProcess[i].CompletionTime - myProcess[i].arrivalTime;
+            myProcess[i].waitingTime = myProcess[i].turnAroundTime - k[i];
+            totalWaitingTime += myProcess[i].waitingTime;
+            totalTurnaroundTime += myProcess[i].turnAroundTime;
+        }
+        for (i = 0; i < myProcess.length; i++) {
             System.out.println("Process " + myProcess[i].pid + ": ");
             System.out.println("turnAroundTime\tCompletion\twaitingTime");
             System.out.println(myProcess[i].turnAroundTime + "\t\t\t" + myProcess[i].CompletionTime + "\t\t"
                     + myProcess[i].waitingTime);
         }
-        for (int n = 0; n < myProcess.length; n++) {
-            totalTurnaroundTime += myProcess[n].turnAroundTime;
-            totalWaitingTime += myProcess[n].waitingTime;
-        }
-        System.out.println("Average TurnAround Time = " + (totalTurnaroundTime / myProcess.length));
-        System.out.println("Average Waiting Time = " + (totalWaitingTime / myProcess.length));
+
+        System.out.println("Average TurnAround Time = " + (totalTurnaroundTime / n));
+        System.out.println("Average Waiting Time = " + (totalWaitingTime / n));
     }
 
 }
