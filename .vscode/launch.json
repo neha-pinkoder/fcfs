@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch fcfs",
+            "request": "launch",
+            "mainClass": "fcfs",
+            "projectName": "scheduling_algos_9d2f5c8f"
+        },
+        {
+            "type": "java",
+            "name": "Launch rr",
+            "request": "launch",
+            "mainClass": "rr",
+            "projectName": "scheduling_algos_9d2f5c8f"
+        },
+        {
+            "type": "java",
+            "name": "Launch rr_learn",
+            "request": "launch",
+            "mainClass": "rr_learn",
+            "projectName": "scheduling_algos_9d2f5c8f"
+        },
+        {
+            "type": "java",
+            "name": "Launch sjfs",
+            "request": "launch",
+            "mainClass": "sjfs",
+            "projectName": "scheduling_algos_9d2f5c8f"
+        }
+    ]
+}
